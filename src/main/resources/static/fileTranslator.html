@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>File Translator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="/style.css" rel="stylesheet">
+    <link href="/cumman.ico" rel="icon">
+
+</head>
+<body style="background-image: linear-gradient(to bottom, rgb(16,11,23), rgb(28,2,58));">
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="my-auto mx-0 row justify-content-center">
+        <label for="languages" class="text"
+               style="font-style: italic; font-size: 32px; color: aliceblue; text-align: center">Selezionare traduzione
+        </label>
+        <select onclick="updateFlag()" id="languages" class="form-select my-2" style=" width: 65%; height: 50% ">
+            <option value="0"> Nessuna:</option>
+        </select>
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6">
+                <h5 style="color: aliceblue; text-align: center">File da tradurre (.txt)</h5>
+                <input disabled id="insertFile" type="file" accept=".txt" onchange="getBase64(event)"
+                       class="form-control"/>
+            </div>
+            <button class="mt-2 btn-outline-light btn" style="width: 55%; display: none; " id="btn-id" onclick="save(fileName, atob(fileValue))"> Traduci</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    var fileValue;
+    var fileName;
+
+    function getBase64(event) {
+        const file = event.target.files[0];
+        var reader = new FileReader();
+        console.log(file)
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            translateService(event.target.files[0].name, reader.result)
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+            alert("ERROR")
+        };
+    }
+
+
+    function translateService(fileNameValue, contentValue) {
+        const path = '/translate/file'
+        const requestOptions = {
+            method: 'POST',
+            body: JSON.stringify({
+                language: document.getElementById("languages").value,
+                fileName: fileNameValue,
+                content: contentValue
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        fetch(path, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('error')
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                fileValue = data.value;
+                fileName = data.fileName;
+                document.getElementById("btn-id").style.display = 'initial';
+            })
+            .catch(error => {
+                console.error('error: ', error);
+            })
+    }
+
+
+    function selectFiller(data) {
+        var select = document.getElementById("languages");
+        for (var i = 0; i < data.length; i++) {
+            var element = document.createElement("option");
+            element.textContent = data[i].description;
+            element.value = data[i].idLanguage;
+            select.appendChild(element);
+        }
+    }
+
+
+    window.onload = function () {
+        languageService();
+        particles();
+    }
+
+    function particles() {
+        Particles.init({
+            selector: '.background',
+            maxParticles: 200,
+            color: '#ebeef1',
+            connectParticles: true
+        });
+    }
+
+    function updateFlag() {
+        document.getElementById("insertFile").disabled = document.getElementById("languages").value === "0";
+    }
+
+    function languageService() {
+        const prova = '/language/getAll'
+        fetch(prova)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('error')
+                }
+                return response.json();
+            })
+            .then(data => {
+                selectFiller(data);
+            })
+            .catch(error => {
+                console.error('error: ', error);
+            })
+    }
+
+    function save(filename, data) {
+        const blob = new Blob([data], {type: 'text/plain'});
+        if (window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveBlob(blob, filename);
+        } else {
+            const elem = window.document.createElement('a');
+            elem.href = window.URL.createObjectURL(blob);
+            elem.download = filename;
+            document.body.appendChild(elem);
+            elem.click();
+            document.body.removeChild(elem);
+        }
+    }
+
+
+</script>
+
+<canvas class="background"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
+
+</body>
+</html>
