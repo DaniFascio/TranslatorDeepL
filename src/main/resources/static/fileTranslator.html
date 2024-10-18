@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="/style.css" rel="stylesheet">
-    <link href="/cumman.ico" rel="icon">
+    <link href="/translator.ico" rel="icon">
 
 </head>
 <body style="background-image: linear-gradient(to bottom, rgb(16,11,23), rgb(28,2,58));">
@@ -16,7 +16,7 @@
         <label for="languages" class="text"
                style="font-style: italic; font-size: 32px; color: aliceblue; text-align: center">Selezionare traduzione
         </label>
-        <select onclick="updateFlag()" id="languages" class="form-select my-2" style=" width: 65%; height: 50% ">
+        <select onchange="updateFlag()" id="languages" class="form-select my-2" style=" width: 65%; height: 50% ">
             <option value="0"> Nessuna:</option>
         </select>
         <div class="row d-flex justify-content-center">
@@ -25,7 +25,17 @@
                 <input disabled id="insertFile" type="file" accept=".txt" onchange="getBase64(event)"
                        class="form-control"/>
             </div>
-            <button class="mt-2 btn-outline-light btn" style="width: 55%; display: none; " id="btn-id" onclick="save(fileName, atob(fileValue))"> Traduci</button>
+            <button class="mt-2 btn-outline-light btn" style="width: 55%; display: none; " id="btn-id"
+                    onclick="translateService(eventFileName, readerResult)"> Traduci
+            </button>
+            <div id="loader" style="display: none">
+                <div class="loader"></div>
+            </div>
+            <!-- <button class="mt-2 btn-outline-light btn" style="width: 55%; display: none; " id="btn-id-download" onclick="save(fileName, atob(fileValue))"> Scarica</button> -->
+            <button class="mt-2 btn-outline-light btn" style="width: 55%; display: none; " id="btn-id-download"
+                    onclick="save(fileName, fileValue)"> Scarica
+            </button>
+
         </div>
     </div>
 </div>
@@ -35,23 +45,33 @@
 
     var fileValue;
     var fileName;
+    var readerResult;
+    var eventFileName;
 
     function getBase64(event) {
+        document.getElementById("btn-id-download").style.display = 'none';
         const file = event.target.files[0];
         var reader = new FileReader();
         console.log(file)
         reader.readAsDataURL(file);
         reader.onload = function () {
-            translateService(event.target.files[0].name, reader.result)
+            // translateService(event.target.files[0].name, reader.result)
+            readerResult = reader.result;
+            eventFileName = event.target.files[0].name;
+            document.getElementById("btn-id").style.display = 'initial';
+
         };
         reader.onerror = function (error) {
             console.log('Error: ', error);
+            document.getElementById("btn-id").style.display = 'none';
             alert("ERROR")
         };
     }
 
 
     function translateService(fileNameValue, contentValue) {
+        document.getElementById("loader").style.display = 'initial';
+        disableAll(true);
         const path = '/translate/file'
         const requestOptions = {
             method: 'POST',
@@ -72,14 +92,27 @@
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 fileValue = data.value;
                 fileName = data.fileName;
-                document.getElementById("btn-id").style.display = 'initial';
+                document.getElementById("loader").style.display = 'none';
+                document.getElementById("btn-id-download").style.display = 'initial';
+                disableAll(false);
+
             })
             .catch(error => {
                 console.error('error: ', error);
+                document.getElementById("btn-id-download").style.display = 'none';
+
             })
+    }
+
+    function disableAll(disableFlag) {
+        document.getElementById("languages").disabled = disableFlag;
+        document.getElementById("insertFile").disabled = disableFlag;
+        document.getElementById("btn-id").disabled = disableFlag;
+
+
     }
 
 
@@ -109,6 +142,7 @@
     }
 
     function updateFlag() {
+        document.getElementById("btn-id-download").style.display = 'none';
         document.getElementById("insertFile").disabled = document.getElementById("languages").value === "0";
     }
 
@@ -142,7 +176,6 @@
             document.body.removeChild(elem);
         }
     }
-
 
 </script>
 

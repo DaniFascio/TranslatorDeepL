@@ -1,7 +1,10 @@
 package com.deepl.translator.controllers;
 
+import com.deepl.api.TextResult;
+import com.deepl.api.Translator;
 import com.deepl.translator.responses.DataResponse;
 import com.deepl.translator.utils.FileUtil;
+import com.deepl.translator.utils.TranslatorUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +37,15 @@ public class TranslatorController {
 
         String fileName = fileUtil.getFileName().replace(".txt", "") + "_" + fileUtil.getLanguage() + ".txt";
         byte[] inputFileData = Base64.getDecoder().decode(fileUtil.getContent().replace("data:text/plain;base64,", ""));
+        String temporaryFile = (System.getProperty("java.io.tmpdir") + fileName);
 
-        try (OutputStream stream = new FileOutputStream("src/main/resources/" + fileName)) {
+        try (OutputStream stream = new FileOutputStream(temporaryFile)) {
             stream.write(inputFileData);
 
-            BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/" + fileName));
+            BufferedReader reader = new BufferedReader(new FileReader(temporaryFile));
             String fileLine = reader.readLine();
+
+            log.info("inizio traduzione...");
 
             while (fileLine != null) {
                 Matcher matcher = KV_REGEX.matcher(fileLine);
@@ -53,26 +59,23 @@ public class TranslatorController {
                 String key = matcher.group(1);
                 String value = matcher.group(2);
 
-                responseBuilder.append("\"").append(key).append("\"").append(": ").append("\"").append("prova").append("\"").append("\n");
+                String valueTranslated = TranslatorUtil.translateText(value, fileUtil.getLanguage());
 
-                File inputFile = new File("src/main/resources/" + fileName);
-                if (inputFile.delete()) {
-                    System.out.println("File deleted: " + inputFile.getName());
-                } else {
-                    System.out.println("Delete failed.");
-                }
+                responseBuilder.append("\"").append(key).append("\"").append(": ").append("\"").append(valueTranslated).append("\"").append(",").append("\n");
 
             }
 
-            byte[] encodedBytesResponse = Base64.getEncoder().encode(responseBuilder.toString().getBytes());
-            return new HttpEntity<>(new DataResponse(fileName, new String(encodedBytesResponse, StandardCharsets.UTF_8)));
+            log.info("fine traduzione");
+
+//            File inputFile = new File(temporaryFile);
+//            if (inputFile.delete()) {
+//                System.out.println("File deleted: " + inputFile.getName());
+//            } else {
+//                System.out.println("Delete failed.");
+//            }
+
+            return new HttpEntity<>(new DataResponse(fileName, responseBuilder.toString()));
         }
     }
-
-//    String authKey = "f63c02c5-f056-...";  // Replace with your key
-//    translator = new Translator(authKey);
-//    TextResult result =
-//            translator.translateText("Hello, world!", null, "fr");
-//        System.out.println(result.getText()); // "Bonjour, le monde !"
 
 }
