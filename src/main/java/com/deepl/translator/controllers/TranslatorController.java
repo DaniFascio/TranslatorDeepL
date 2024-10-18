@@ -1,7 +1,5 @@
 package com.deepl.translator.controllers;
 
-import com.deepl.api.TextResult;
-import com.deepl.api.Translator;
 import com.deepl.translator.responses.DataResponse;
 import com.deepl.translator.utils.FileUtil;
 import com.deepl.translator.utils.TranslatorUtil;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,8 +28,7 @@ public class TranslatorController {
     private static final Pattern KV_REGEX = Pattern.compile("^.*?\"(.*)\"\\s*:\\s*\"(.*)\".*?$");
 
     @PostMapping(path = "/file", produces = "application/json")
-    public HttpEntity<?> login(@RequestBody FileUtil fileUtil) throws Exception {
-        HttpEntity<?> httpEntity;
+    public HttpEntity<?> translateFile(@RequestBody FileUtil fileUtil) throws Exception {
         StringBuilder responseBuilder = new StringBuilder();
 
         String fileName = fileUtil.getFileName().replace(".txt", "") + "_" + fileUtil.getLanguage() + ".txt";
@@ -45,7 +41,7 @@ public class TranslatorController {
             BufferedReader reader = new BufferedReader(new FileReader(temporaryFile));
             String fileLine = reader.readLine();
 
-            log.info("inizio traduzione...");
+            log.info("TRANSLATION STARTED: IT --> {}", fileUtil.getLanguage());
 
             while (fileLine != null) {
                 Matcher matcher = KV_REGEX.matcher(fileLine);
@@ -65,15 +61,7 @@ public class TranslatorController {
 
             }
 
-            log.info("fine traduzione");
-
-//            File inputFile = new File(temporaryFile);
-//            if (inputFile.delete()) {
-//                System.out.println("File deleted: " + inputFile.getName());
-//            } else {
-//                System.out.println("Delete failed.");
-//            }
-
+            log.info("TRANSLATION COMPLETED --> {}", fileUtil.getFileName());
             return new HttpEntity<>(new DataResponse(fileName, responseBuilder.toString()));
         }
     }

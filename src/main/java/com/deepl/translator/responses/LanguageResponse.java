@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LanguageResponse {
+
     private String idLanguage;
     private String description;
+
 }

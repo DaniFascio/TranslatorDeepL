@@ -20,9 +20,7 @@ public class LanguageController {
     private HttpServletRequest request;
 
     @GetMapping(path = "/getAll", produces = "application/json")
-    public HttpEntity<?> login() throws Exception {
-        HttpEntity<?> httpEntity;
-
+    public HttpEntity<?> getAllLanguages() throws Exception {
         List<LanguageResponse> list = new ArrayList<>();
         Languages[] languages = Languages.values();
         
