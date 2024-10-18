@@ -9,7 +9,7 @@ public class TranslatorUtil {
     private static String authKey;
 
     public static String translateText(String text, String idCountry) throws Exception {
-        Translator translator = new Translator("");
+        Translator translator = new Translator(authKey);
 
         TextResult result = translator.translateText(text, "IT", idCountry);
         return (result.getText());
