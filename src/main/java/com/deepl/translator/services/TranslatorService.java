@@ -1,4 +1,4 @@
-package com.deepl.translator.utils;
+package com.deepl.translator.services;
 
 import com.deepl.api.*;
 import org.springframework.beans.factory.annotation.Value;

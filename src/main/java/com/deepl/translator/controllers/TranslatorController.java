@@ -2,7 +2,7 @@ package com.deepl.translator.controllers;
 
 import com.deepl.translator.responses.DataResponse;
 import com.deepl.translator.utils.FileUtil;
-import com.deepl.translator.utils.TranslatorService;
+import com.deepl.translator.services.TranslatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpEntity;
