@@ -2,10 +2,9 @@ package com.deepl.translator.controllers;
 
 import com.deepl.translator.responses.DataResponse;
 import com.deepl.translator.utils.FileUtil;
-import com.deepl.translator.utils.TranslatorUtil;
-import jakarta.servlet.http.HttpServletRequest;
+import com.deepl.translator.utils.TranslatorService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,13 +16,13 @@ import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@RequiredArgsConstructor
 @RestController
 @Log4j2
 @RequestMapping(value = "/translate")
 public class TranslatorController {
 
-    @Autowired
-    private HttpServletRequest request;
+    private final TranslatorService translatorService;
 
     private static final Pattern KV_REGEX = Pattern.compile("^.*?\"(.*)\"\\s*:\\s*\"(.*)\".*?$");
 
@@ -55,7 +54,7 @@ public class TranslatorController {
                 String key = matcher.group(1);
                 String value = matcher.group(2);
 
-                String valueTranslated = TranslatorUtil.translateText(value, fileUtil.getLanguage());
+                String valueTranslated = translatorService.translateText(value, fileUtil.getLanguage());
 
                 responseBuilder.append("\"").append(key).append("\"").append(": ").append("\"").append(valueTranslated).append("\"").append(",").append("\n");
 
