@@ -8,8 +8,8 @@
 >  All this through the integration of **DeepL APIs**.
 > ####
 > ####
-<img width="1792" alt="screenshot" src="https://github.com/user-attachments/assets/069d8724-6672-4b52-8de6-e9ee1cc17ebd">
- 
+ <img width="1792" alt="Screenshot" src="https://github.com/user-attachments/assets/0289684e-3a65-4282-9df6-891a27488df1">
+
 > #### **The Translation** will only work for the format listed below.
 >
 >
