@@ -1,33 +1,33 @@
 # TranslatorDeepL🌐
  
-> #### WebApp che permette la traduzione di un file .txt contenente due colonne di dati:
+> #### WebApp that allows the translation of a .txt file containing two columns of data:
 >
-> - mantiene la prima ("key_value").
-> - traduce la seconda nella lingua selezionata.
+> - mantains the first ("key_value").
+> - translates the second into the selected language.
 >
->  Tutto questo tramite l'integrazione delle API di **DeepL**.
+>  All this through the integration of **DeepL APIs**.
 > ####
 > ####
 <img width="1792" alt="screenshot" src="https://github.com/user-attachments/assets/069d8724-6672-4b52-8de6-e9ee1cc17ebd">
  
-> #### **La Traduzione** funzionerà solamente per il formato elencato qui sotto.
+> #### **The Translation** will only work for the format listed below.
 >
 >
-> **_Esempio utilizzo:_**
+> **_Usage example:_**
 
 ```
 ------------------------------------------------         ------------------------------------------------
-**Italiano**                                        |      **Giapponese**   
+**English**                                         |      **Japanese**   
 ------------------------------------------------         ------------------------------------------------
       
-"accetta_etica": "Codice etico",                   -->     "accetta_etica": "倫理規定",
-"aggiungi_al_carrello": "Aggiungi al carrello",    -->     "aggiungi_al_carrello": "カートに追加",
+"accept_ethics": "Code of ethics",                 -->     "accept_ethics": "倫理規定",
+"add_to_cart": "Add to cart",                      -->     "add_to_cart": "カートに追加",
                                                    
 ------------------------------------------------    |    ------------------------------------------------
 
 
 
-                                              **Formato**
+                                              **Format**
                                     --------------------------------
                                     |     "key_value":  "text"     |
                                     --------------------------------
