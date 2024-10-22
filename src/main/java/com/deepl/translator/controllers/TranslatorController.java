@@ -30,7 +30,7 @@ public class TranslatorController {
     public HttpEntity<?> translateFile(@RequestBody FileUtil fileUtil) throws Exception {
         StringBuilder responseBuilder = new StringBuilder();
 
-        String fileName = fileUtil.getFileName().replace(".txt", "") + "_" + fileUtil.getLanguage() + ".txt";
+        String fileName = fileUtil.getFileName().replace(".txt", "") + "_" + fileUtil.getLanguage() + ".txt" + " ....";
         byte[] inputFileData = Base64.getDecoder().decode(fileUtil.getContent().replace("data:text/plain;base64,", ""));
         String temporaryFile = (System.getProperty("java.io.tmpdir") + fileName);
 
@@ -60,7 +60,7 @@ public class TranslatorController {
 
             }
 
-            log.info("TRANSLATION COMPLETED --> {}", fileUtil.getFileName());
+            log.info("TRANSLATION COMPLETED --> {}", fileName);
             return new HttpEntity<>(new DataResponse(fileName, responseBuilder.toString()));
         }
     }
