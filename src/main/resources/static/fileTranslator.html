@@ -14,26 +14,26 @@
 <div class="container vh-100 d-flex justify-content-center align-items-center">
     <div class="my-auto mx-0 row justify-content-center">
         <label for="languages" class="text"
-               style="font-style: italic; font-size: 32px; color: aliceblue; text-align: center">Selezionare traduzione
+               style="font-style: italic; font-size: 32px; color: aliceblue; text-align: center">Select language
         </label>
         <select onchange="updateFlag()" id="languages" class="form-select my-2" style=" width: 65%; height: 50% ">
-            <option value="0"> Nessuna:</option>
+            <option value="0"> Choose option:</option>
         </select>
         <div class="row d-flex justify-content-center">
             <div class="col-md-6">
-                <h5 style="color: aliceblue; text-align: center">File da tradurre (.txt)</h5>
+                <h5 style="color: aliceblue; text-align: center">File to translate (.txt)</h5>
                 <input disabled id="insertFile" type="file" accept=".txt" onchange="getBase64(event)"
                        class="form-control"/>
             </div>
             <button class="mt-2 btn-outline-light btn" style="width: 55%; display: none; " id="btn-id"
-                    onclick="translateService(eventFileName, readerResult)"> Traduci
+                    onclick="translateService(eventFileName, readerResult)"> Translate
             </button>
             <div id="loader" style="display: none">
                 <div class="loader"></div>
             </div>
             <!-- <button class="mt-2 btn-outline-light btn" style="width: 55%; display: none; " id="btn-id-download" onclick="save(fileName, atob(fileValue))"> Scarica</button> -->
             <button class="mt-2 btn-outline-light btn" style="width: 55%; display: none; " id="btn-id-download"
-                    onclick="save(fileName, fileValue)"> Scarica
+                    onclick="save(fileName, fileValue)"> Download
             </button>
 
         </div>
