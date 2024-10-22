@@ -54,7 +54,7 @@ public class TranslatorController {
                 String key = matcher.group(1);
                 String value = matcher.group(2);
 
-                String valueTranslated = translatorService.translateText(value, fileUtil.getLanguage());
+                String valueTranslated = translatorService.translateText(value, fileUtil.getLanguage()).replace("'", "\"");
 
                 responseBuilder.append("\"").append(key).append("\"").append(": ").append("\"").append(valueTranslated).append("\"").append(",").append("\n");
 
