@@ -30,7 +30,7 @@ public class TranslatorController {
     public HttpEntity<?> translateFile(@RequestBody FileUtil fileUtil) throws Exception {
         StringBuilder responseBuilder = new StringBuilder();
 
-        String fileName = fileUtil.getFileName().replace(".txt", "") + "_" + fileUtil.getLanguage() + ".txt" + " ....";
+        String fileName = fileUtil.getFileName().replace(".txt", "") + "_" + fileUtil.getLanguage() + ".txt";
         byte[] inputFileData = Base64.getDecoder().decode(fileUtil.getContent().replace("data:text/plain;base64,", ""));
         String temporaryFile = (System.getProperty("java.io.tmpdir") + fileName);
 
@@ -40,7 +40,7 @@ public class TranslatorController {
             BufferedReader reader = new BufferedReader(new FileReader(temporaryFile));
             String fileLine = reader.readLine();
 
-            log.info("TRANSLATION STARTED: IT --> {}", fileUtil.getLanguage());
+            log.info("TRANSLATION STARTED: IT --> {}", fileUtil.getFileName() + " " +fileUtil.getLanguage() + " ...");
 
             while (fileLine != null) {
                 Matcher matcher = KV_REGEX.matcher(fileLine);

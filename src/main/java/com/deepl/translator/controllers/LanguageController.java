@@ -2,9 +2,7 @@ package com.deepl.translator.controllers;
 
 import com.deepl.translator.responses.LanguageResponse;
 import com.deepl.translator.utils.Languages;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +13,6 @@ import java.util.List;
 @Log4j2
 @RequestMapping(value = "/language")
 public class LanguageController {
-
-    @Autowired
-    private HttpServletRequest request;
 
     @GetMapping(path = "/getAll", produces = "application/json")
     public HttpEntity<?> getAllLanguages() throws Exception {
