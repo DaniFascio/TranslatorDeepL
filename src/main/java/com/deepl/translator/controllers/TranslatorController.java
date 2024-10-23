@@ -6,10 +6,7 @@ import com.deepl.translator.services.TranslatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
 import java.util.Base64;
@@ -40,7 +37,7 @@ public class TranslatorController {
             BufferedReader reader = new BufferedReader(new FileReader(temporaryFile));
             String fileLine = reader.readLine();
 
-            log.info("TRANSLATION STARTED: IT --> {}", fileUtil.getFileName() + " " +fileUtil.getLanguage() + " ...");
+            log.info("TRANSLATION STARTED: IT --> {}", fileUtil.getFileName() + " " + fileUtil.getLanguage() + " ...");
 
             while (fileLine != null) {
                 Matcher matcher = KV_REGEX.matcher(fileLine);
@@ -63,6 +60,11 @@ public class TranslatorController {
             log.info("TRANSLATION COMPLETED --> {}", fileName);
             return new HttpEntity<>(new DataResponse(fileName, responseBuilder.toString()));
         }
+    }
+
+    @GetMapping(path = "/getUsage")
+    public HttpEntity<?> remainingChars() throws Exception {
+        return new HttpEntity<>(translatorService.getusage());
     }
 
 }
