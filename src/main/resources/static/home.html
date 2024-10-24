@@ -120,8 +120,8 @@
         var select = document.getElementById("languages");
         for (var i = 0; i < data.length; i++) {
             var element = document.createElement("option");
-            element.textContent = data[i].description;
-            element.value = data[i].idLanguage;
+            element.textContent = data[i].name;
+            element.value = data[i].code;
             select.appendChild(element);
         }
     }
@@ -147,7 +147,7 @@
     }
 
     function languageService() {
-        const prova = '/language/getAll'
+        const prova = '/language/getSourceLanguages'
         fetch(prova)
             .then(response => {
                 if (!response.ok) {

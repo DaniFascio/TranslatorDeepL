@@ -1,6 +1,7 @@
 package com.deepl.translator.controllers;
 
 import com.deepl.translator.responses.DataResponse;
+import com.deepl.translator.services.LanguageService;
 import com.deepl.translator.utils.FileUtil;
 import com.deepl.translator.services.TranslatorService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ public class TranslatorController {
 
     private final TranslatorService translatorService;
 
+    private final LanguageService languageService;
+
     private static final Pattern KV_REGEX = Pattern.compile("^.*?\"(.*)\"\\s*:\\s*\"(.*)\".*?$");
 
     @PostMapping(path = "/file", produces = "application/json")
@@ -30,6 +33,9 @@ public class TranslatorController {
         String fileName = fileUtil.getFileName().replace(".txt", "") + "_" + fileUtil.getLanguage() + ".txt";
         byte[] inputFileData = Base64.getDecoder().decode(fileUtil.getContent().replace("data:text/plain;base64,", ""));
         String temporaryFile = (System.getProperty("java.io.tmpdir") + fileName);
+        String codeLang = languageService.checkLanguageAcronym(fileUtil.getLanguage());
+        if (!codeLang.isEmpty())
+            fileUtil.setLanguage(codeLang);
 
         try (OutputStream stream = new FileOutputStream(temporaryFile)) {
             stream.write(inputFileData);
@@ -44,7 +50,7 @@ public class TranslatorController {
                 fileLine = reader.readLine();
 
                 if (!matcher.matches()) {
-                    System.out.println("No match");
+                    System.out.println("No match: " + fileLine);
                     continue;
                 }
 
@@ -64,7 +70,7 @@ public class TranslatorController {
 
     @GetMapping(path = "/getUsage")
     public HttpEntity<?> remainingChars() throws Exception {
-        return new HttpEntity<>(translatorService.getusage());
+        return new HttpEntity<>(translatorService.getUsage());
     }
 
 }

@@ -21,7 +21,7 @@ public class TranslatorService {
         return (result.getText());
     }
 
-    public Usage getusage() throws Exception {
+    public Usage getUsage() throws Exception {
         Translator translator = new Translator(authKey);
         return translator.getUsage();
     }
